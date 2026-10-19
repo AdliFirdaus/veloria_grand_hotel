@@ -238,15 +238,6 @@ veloria_grand_hotel/
 
 ---
 
-## Team Members
-
-| Member | Role |
-|--------|------|
-| Member 1 | Backend & Security Controls |
-| Member 2 | Frontend & System Features |
-| Member 3 | Security Design & Vulnerability Analysis |
-| Member 4 | Validation, Evidence & GitHub |
-
 ## Course Information
 
 - **Course:** IKB21503 Secure Software Development
