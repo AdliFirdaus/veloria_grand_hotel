@@ -1,7 +1,7 @@
 Django==4.2.13
-django-crispy-forms==2.1
-crispy-bootstrap5==2024.2
+django-crispy-forms==2.5
+crispy-bootstrap5==2026.3
 python-decouple==3.8
-django-csp==3.8
-argon2-cffi==23.1.0
-Pillow==10.3.0
+django-csp==4.0
+argon2-cffi==25.1.0
+Pillow==12.2.0

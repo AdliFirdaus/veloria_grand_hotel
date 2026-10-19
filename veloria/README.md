@@ -26,7 +26,7 @@ A secure hotel booking web application built with Django as part of the IKB21503
 ## Tech Stack
 
 - **Framework:** Django 4.2.13
-- **Language:** Python 3.11
+- **Language:** Python 3.10+
 - **Database:** SQLite (development)
 - **Frontend:** Bootstrap 5, Font Awesome
 - **Password Hashing:** Argon2
@@ -35,55 +35,63 @@ A secure hotel booking web application built with Django as part of the IKB21503
 
 ## Installation & Setup
 
-### 1. Clone the repository
+Requires **Python 3.10 or newer** and Git.
+
+### Quick setup (recommended)
+
 ```bash
-git clone <repo-url>
-cd veloria
+git clone https://github.com/AdliFirdaus/veloria_grand_hotel.git
+cd veloria_grand_hotel/veloria
 ```
 
-### 2. Create virtual environment
+Then run the setup script. It creates the virtual environment, installs dependencies, creates `.env` with a freshly generated `SECRET_KEY`, and sets up the database (including the default room types).
+
 ```bash
-python -m venv venv
-source venv/bin/activate        # Linux/Mac
-venv\Scripts\activate           # Windows
+setup.bat          # Windows
+./setup.sh         # Linux/Mac
 ```
 
-### 3. Install dependencies
-```bash
-pip install -r requirements.txt
-```
+Create an admin account and start the server:
 
-### 4. Configure environment
 ```bash
-cp .env.example .env
-# Edit .env with your settings
-```
+venv\Scripts\python manage.py createsuperuser     # Windows
+venv\Scripts\python manage.py runserver
 
-### 5. Run migrations
-```bash
-python manage.py migrate
-```
-
-### 6. Create admin user
-```bash
-python manage.py createsuperuser
-```
-
-### 7. Create initial room types (optional)
-```bash
-python manage.py shell
->>> from rooms.models import RoomType
->>> RoomType.objects.create(name='Deluxe Room', description='Spacious deluxe room')
->>> RoomType.objects.create(name='Executive Suite', description='Premium executive suite')
->>> RoomType.objects.create(name='Presidential Suite', description='Top floor presidential suite')
-```
-
-### 8. Run the server
-```bash
-python manage.py runserver
+venv/bin/python manage.py createsuperuser         # Linux/Mac
+venv/bin/python manage.py runserver
 ```
 
 Visit: http://127.0.0.1:8000
+
+### Manual setup
+
+```bash
+cd veloria_grand_hotel/veloria
+python -m venv venv
+venv\Scripts\activate                  # Windows
+source venv/bin/activate               # Linux/Mac
+pip install -r requirements.txt
+cp .env.example .env                   # Windows: copy .env.example .env
+```
+
+Edit `.env` and replace `SECRET_KEY` with a random value. You can generate one with:
+
+```bash
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+```
+
+Then:
+
+```bash
+python manage.py migrate               # also creates the default room types
+python manage.py createsuperuser
+python manage.py runserver
+```
+
+### Notes
+
+- `.env`, `db.sqlite3`, `media/` and `logs/` are not in the repository. Each person gets their own local database and uploads.
+- `DEBUG=True` in `.env.example` is for local development only. Set `DEBUG=False` and the `SECURE_*` / `*_COOKIE_SECURE` options to `True` when deploying behind HTTPS.
 
 ---
 
