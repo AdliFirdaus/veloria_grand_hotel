@@ -114,7 +114,7 @@ You can also do this from the Django admin panel. Log in at **http://127.0.0.1:8
 
 New accounts created through the **Register** page are always guests.
 
-**Getting started:** the database starts empty except for the room types. Log in as admin, add a few rooms (with photos) (**Add Room** in the navigation menu, or **Add New Room** on the admin dashboard), then register a separate guest account to try booking them.
+**Getting started:** the database starts empty except for the room types. Log in as admin, add a few rooms with photos using **Add Room** in the navigation menu or **Add New Room** on the admin dashboard, then register a separate guest account to try booking them.
 
 ---
 
