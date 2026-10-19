@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% block title %}Rooms - {{ SITE_NAME }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <h2 class="font-serif mb-4">Our <span class="text-gold">Rooms</span></h2>
+
+    <!-- Filter -->
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-body">
+            <form method="get" class="row g-2 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label small fw-medium">Room Type</label>
+                    <select name="type" class="form-select form-select-sm">
+                        <option value="">All Types</option>
+                        {% for rt in room_types %}
+                        <option value="{{ rt.id }}" {% if request.GET.type == rt.id|stringformat:"s" %}selected{% endif %}>{{ rt.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small fw-medium">Min Price</label>
+                    <input type="number" name="min_price" class="form-control form-control-sm" placeholder="RM" value="{{ request.GET.min_price }}">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small fw-medium">Max Price</label>
+                    <input type="number" name="max_price" class="form-control form-control-sm" placeholder="RM" value="{{ request.GET.max_price }}">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small fw-medium">Guests</label>
+                    <input type="number" name="capacity" class="form-control form-control-sm" placeholder="Min" min="1" value="{{ request.GET.capacity }}">
+                </div>
+                <div class="col-md-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-navy btn-sm px-3">Filter</button>
+                    <a href="{% url 'rooms:room_list' %}" class="btn btn-outline-secondary btn-sm">Clear</a>
+                    {% if user.is_authenticated and user.is_admin_user %}
+                    <a href="{% url 'rooms:room_create' %}" class="btn btn-gold btn-sm ms-auto"><i class="fas fa-plus me-1"></i>Add</a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        {% for room in rooms %}
+        <div class="col-md-4">
+            <div class="card room-card h-100 shadow-sm border-0">
+                {% if room.image %}
+                <img src="{{ room.image.url }}" class="card-img-top room-img" alt="Room {{ room.room_number }}">
+                {% else %}
+                <div class="room-img-placeholder d-flex align-items-center justify-content-center">
+                    <i class="fas fa-bed fa-3x text-muted"></i>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <h5 class="mb-0">{{ room.room_type.name }}</h5>
+                        <span class="badge bg-navy">Room {{ room.room_number }}</span>
+                    </div>
+                    <p class="text-muted small">{{ room.description|truncatechars:90 }}</p>
+                    <div class="d-flex gap-3 text-muted small mb-2">
+                        <span><i class="fas fa-users me-1"></i>{{ room.capacity }} guests</span>
+                        <span><i class="fas fa-layer-group me-1"></i>Floor {{ room.floor }}</span>
+                    </div>
+                    {% if room.get_amenities_list %}
+                    <div class="d-flex flex-wrap gap-1">
+                        {% for amenity in room.get_amenities_list|slice:":3" %}
+                        <span class="badge bg-light text-dark border">{{ amenity }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <span class="text-gold fw-bold">RM {{ room.price_per_night }}<small class="text-muted fw-normal">/night</small></span>
+                    <div class="d-flex gap-1">
+                        {% if user.is_authenticated and user.is_admin_user %}
+                        <a href="{% url 'rooms:room_update' room.pk %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-edit"></i></a>
+                        {% endif %}
+                        <a href="{% url 'rooms:room_detail' room.pk %}" class="btn btn-sm btn-navy">View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <i class="fas fa-bed fa-3x text-muted mb-3 d-block"></i>
+            <h5 class="text-muted">No rooms found matching your criteria.</h5>
+            <a href="{% url 'rooms:room_list' %}" class="btn btn-navy mt-2">View All Rooms</a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if rooms.has_other_pages %}
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if rooms.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ rooms.previous_page_number }}">Previous</a></li>
+            {% endif %}
+            {% for num in rooms.paginator.page_range %}
+            <li class="page-item {% if rooms.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+            {% if rooms.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ rooms.next_page_number }}">Next</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

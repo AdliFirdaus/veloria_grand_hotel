@@ -1,0 +1,141 @@
+/* ===== VELORIA GRAND HOTEL — Navy Blue & Gold Theme ===== */
+
+:root {
+  --navy: #1a2e4a;
+  --navy-dark: #0f1e30;
+  --navy-light: #243d5e;
+  --gold: #c9a84c;
+  --gold-light: #e2c06e;
+  --gold-dark: #a8893a;
+  --cream: #f9f6f0;
+}
+
+/* Fonts */
+body { font-family: 'Inter', sans-serif; background-color: #fff; }
+.font-serif { font-family: 'Playfair Display', serif; }
+
+/* Colors */
+.text-navy { color: var(--navy) !important; }
+.text-gold { color: var(--gold) !important; }
+.bg-navy { background-color: var(--navy) !important; }
+.bg-gold { background-color: var(--gold) !important; }
+
+/* Navbar */
+.veloria-navbar {
+  background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 100%);
+  padding: 0.75rem 0;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+}
+.veloria-navbar .brand-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.veloria-navbar .nav-link {
+  color: rgba(255,255,255,0.85) !important;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+  padding: 0.5rem 0.75rem !important;
+}
+.veloria-navbar .nav-link:hover { color: var(--gold) !important; }
+
+/* Buttons */
+.btn-navy {
+  background-color: var(--navy);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+.btn-navy:hover { background-color: var(--navy-light); color: #fff; }
+.btn-outline-navy {
+  border: 2px solid var(--navy);
+  color: var(--navy);
+  border-radius: 4px;
+  background: transparent;
+}
+.btn-outline-navy:hover { background-color: var(--navy); color: #fff; }
+.btn-gold {
+  background-color: var(--gold);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+.btn-gold:hover { background-color: var(--gold-dark); color: #fff; }
+
+/* Hero */
+.veloria-hero {
+  min-height: 520px;
+  background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 60%, #2a4a6e 100%);
+  position: relative;
+}
+.veloria-hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+}
+
+/* Room Cards */
+.room-card { border-radius: 10px; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; }
+.room-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.15) !important; }
+.room-img { height: 200px; object-fit: cover; }
+.room-img-placeholder { height: 200px; background-color: var(--cream); }
+
+/* Feature Cards */
+.feature-card {
+  border-radius: 10px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  background: #fff;
+}
+.feature-card:hover { transform: translateY(-4px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+
+/* Stat Cards */
+.stat-card { border-radius: 12px; transition: transform 0.2s; }
+.stat-card:hover { transform: translateY(-3px); }
+
+/* Status Badges */
+.status-pending { background-color: #ffc107; color: #000; }
+.status-confirmed { background-color: #198754; color: #fff; }
+.status-cancelled { background-color: #dc3545; color: #fff; }
+.status-completed { background-color: #0d6efd; color: #fff; }
+
+/* Dropdown */
+.veloria-dropdown {
+  border: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  border-radius: 8px;
+}
+
+/* Footer */
+.veloria-footer {
+  background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 100%);
+  color: rgba(255,255,255,0.8);
+}
+.footer-link {
+  color: rgba(255,255,255,0.65);
+  text-decoration: none;
+  font-size: 0.9rem;
+  display: block;
+  margin-bottom: 4px;
+}
+.footer-link:hover { color: var(--gold); }
+
+/* Table */
+.table th { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* Forms */
+.form-control:focus, .form-select:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 0.2rem rgba(201, 168, 76, 0.25);
+}
+
+/* Pagination */
+.page-link { color: var(--navy); }
+.page-item.active .page-link { background-color: var(--navy); border-color: var(--navy); }
+
+/* Alert override for 'error' tag */
+.alert-error { background-color: #f8d7da; border-color: #f5c2c7; color: #842029; }

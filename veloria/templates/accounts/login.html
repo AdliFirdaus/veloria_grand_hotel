@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Login - {{ SITE_NAME }}{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-navy text-white text-center py-4">
+                    <i class="fas fa-crown fa-2x text-gold mb-2 d-block"></i>
+                    <h4 class="mb-0 font-serif">{{ SITE_NAME }}</h4>
+                    <small class="opacity-75">Sign in to your account</small>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" novalidate autocomplete="off">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">Username</label>
+                            {{ form.username }}
+                            {% if form.username.errors %}
+                            <div class="text-danger small mt-1">{{ form.username.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-medium">Password</label>
+                            {{ form.password }}
+                            {% if form.password.errors %}
+                            <div class="text-danger small mt-1">{{ form.password.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <button type="submit" class="btn btn-navy w-100 py-2 fw-medium">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login
+                        </button>
+                    </form>
+                </div>
+                <div class="card-footer text-center bg-light">
+                    <small>Don't have an account? <a href="{% url 'accounts:register' %}" class="text-gold fw-medium">Register here</a></small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block title %}{{ SITE_NAME }} - {{ SITE_TAGLINE }}{% endblock %}
+{% block content %}
+<!-- Hero Section -->
+<section class="veloria-hero d-flex align-items-center">
+    <div class="container text-center text-white">
+        <h1 class="display-3 fw-bold font-serif mb-3">Welcome to <span class="text-gold">{{ SITE_NAME }}</span></h1>
+        <p class="lead mb-4 opacity-75">{{ SITE_TAGLINE }}</p>
+        <a href="{% url 'rooms:room_list' %}" class="btn btn-gold btn-lg px-5 me-3">
+            <i class="fas fa-bed me-2"></i>Explore Rooms
+        </a>
+        {% if not user.is_authenticated %}
+        <a href="{% url 'accounts:register' %}" class="btn btn-outline-light btn-lg px-5">
+            <i class="fas fa-user-plus me-2"></i>Book Now
+        </a>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Features -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center g-4">
+            <div class="col-md-3">
+                <div class="feature-card p-4">
+                    <i class="fas fa-shield-alt fa-2x text-navy mb-3"></i>
+                    <h5>Secure Booking</h5>
+                    <p class="text-muted small">OWASP-compliant security for all your data</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="feature-card p-4">
+                    <i class="fas fa-concierge-bell fa-2x text-navy mb-3"></i>
+                    <h5>24/7 Service</h5>
+                    <p class="text-muted small">Round-the-clock guest assistance</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="feature-card p-4">
+                    <i class="fas fa-star fa-2x text-navy mb-3"></i>
+                    <h5>Luxury Rooms</h5>
+                    <p class="text-muted small">Elegantly furnished premium suites</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="feature-card p-4">
+                    <i class="fas fa-map-marker-alt fa-2x text-navy mb-3"></i>
+                    <h5>Prime Location</h5>
+                    <p class="text-muted small">Heart of Kuala Lumpur city centre</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Rooms -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="font-serif">Our <span class="text-gold">Featured Rooms</span></h2>
+            <p class="text-muted">Experience luxury at its finest</p>
+        </div>
+        <div class="row g-4">
+            {% for room in featured_rooms %}
+            <div class="col-md-4">
+                <div class="card room-card h-100 shadow-sm">
+                    {% if room.image %}
+                    <img src="{{ room.image.url }}" class="card-img-top room-img" alt="Room {{ room.room_number }}">
+                    {% else %}
+                    <div class="room-img-placeholder d-flex align-items-center justify-content-center">
+                        <i class="fas fa-bed fa-3x text-muted"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title mb-0">{{ room.room_type.name }}</h5>
+                            <span class="badge bg-navy">Room {{ room.room_number }}</span>
+                        </div>
+                        <p class="card-text text-muted small">{{ room.description|truncatechars:80 }}</p>
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-users text-gold me-2"></i>
+                            <small>Up to {{ room.capacity }} guests</small>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between align-items-center">
+                        <span class="text-gold fw-bold fs-5">RM {{ room.price_per_night }}<small class="text-muted fw-normal">/night</small></span>
+                        <a href="{% url 'rooms:room_detail' room.pk %}" class="btn btn-navy btn-sm">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No rooms available at the moment.</p>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'rooms:room_list' %}" class="btn btn-outline-navy px-4">View All Rooms</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}Booking Details - {{ SITE_NAME }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="card shadow border-0">
+                <div class="card-header bg-navy text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-calendar-check me-2"></i>Booking Details</h5>
+                    <span class="badge status-{{ booking.status }} fs-6">{{ booking.get_status_display }}</span>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <small class="text-muted d-block">Booking ID</small>
+                            <strong class="small">{{ booking.id }}</strong>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted d-block">Room</small>
+                            <strong>Room {{ booking.room.room_number }} - {{ booking.room.room_type.name }}</strong>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted d-block">Check-in</small>
+                            <strong>{{ booking.check_in_date }}</strong>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted d-block">Check-out</small>
+                            <strong>{{ booking.check_out_date }}</strong>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted d-block">Duration</small>
+                            <strong>{{ booking.get_nights }} night(s)</strong>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted d-block">Guests</small>
+                            <strong>{{ booking.guests }}</strong>
+                        </div>
+                        <div class="col-12">
+                            <small class="text-muted d-block">Special Requests</small>
+                            <strong>{{ booking.special_requests|default:"None" }}</strong>
+                        </div>
+                        <div class="col-12">
+                            <hr>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fs-5">Total Amount</span>
+                                <span class="fs-4 fw-bold text-gold">RM {{ booking.total_price }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer d-flex gap-2">
+                    {% if booking.status in "pending,confirmed" and not user.is_admin_user %}
+                    <a href="{% url 'bookings:booking_cancel' booking.pk %}" class="btn btn-outline-danger">
+                        <i class="fas fa-times me-2"></i>Cancel Booking
+                    </a>
+                    {% endif %}
+                    {% if user.is_admin_user %}
+                    <a href="{% url 'bookings:booking_update_status' booking.pk %}" class="btn btn-navy">
+                        <i class="fas fa-edit me-2"></i>Update Status
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'bookings:booking_list' %}" class="btn btn-outline-secondary ms-auto">Back to Bookings</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

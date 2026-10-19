@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{ SITE_NAME }} - {{ SITE_TAGLINE }}">
+    <title>{% block title %}{{ SITE_NAME }}{% endblock %}</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    {% load static %}
+    <link href="{% static 'css/veloria.css' %}" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark veloria-navbar sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'hotel:home' %}">
+            <i class="fas fa-crown me-2 text-gold"></i>
+            <span class="brand-name">{{ SITE_NAME }}</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'hotel:home' %}"><i class="fas fa-home me-1"></i>Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'rooms:room_list' %}"><i class="fas fa-bed me-1"></i>Rooms</a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'bookings:booking_list' %}"><i class="fas fa-calendar me-1"></i>Bookings</a>
+                </li>
+                {% if user.is_admin_user %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                        <i class="fas fa-shield-alt me-1"></i>Admin
+                    </a>
+                    <ul class="dropdown-menu veloria-dropdown">
+                        <li><a class="dropdown-item" href="{% url 'rooms:room_create' %}"><i class="fas fa-plus me-2"></i>Add Room</a></li>
+                        <li><a class="dropdown-item" href="{% url 'audit:audit_log_list' %}"><i class="fas fa-clipboard-list me-2"></i>Audit Logs</a></li>
+                        <li><a class="dropdown-item" href="/admin/"><i class="fas fa-cog me-2"></i>Django Admin</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+                {% endif %}
+            </ul>
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                        <i class="fas fa-user-circle me-1"></i>{{ user.first_name|default:user.username }}
+                        {% if user.is_admin_user %}<span class="badge bg-gold ms-1">Admin</span>{% endif %}
+                    </a>
+                    <ul class="dropdown-menu veloria-dropdown dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{% url 'hotel:dashboard' %}"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
+                        <li><a class="dropdown-item" href="{% url 'accounts:profile' %}"><i class="fas fa-user-edit me-2"></i>Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form method="post" action="{% url 'accounts:logout' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'accounts:login' %}"><i class="fas fa-sign-in-alt me-1"></i>Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-gold ms-2" href="{% url 'accounts:register' %}">Register</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Messages -->
+{% if messages %}
+<div class="container mt-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+        {% if message.tags == 'error' or message.tags == 'danger' %}
+            <i class="fas fa-exclamation-circle me-2"></i>
+        {% elif message.tags == 'success' %}
+            <i class="fas fa-check-circle me-2"></i>
+        {% else %}
+            <i class="fas fa-info-circle me-2"></i>
+        {% endif %}
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Main Content -->
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+<!-- Footer -->
+<footer class="veloria-footer mt-5">
+    <div class="container">
+        <div class="row py-4">
+            <div class="col-md-4 mb-3">
+                <h5 class="text-gold mb-3"><i class="fas fa-crown me-2"></i>{{ SITE_NAME }}</h5>
+                <p class="text-muted small">{{ SITE_TAGLINE }}</p>
+            </div>
+            <div class="col-md-4 mb-3">
+                <h6 class="text-light mb-3">Quick Links</h6>
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'hotel:home' %}" class="footer-link">Home</a></li>
+                    <li><a href="{% url 'rooms:room_list' %}" class="footer-link">Our Rooms</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 mb-3">
+                <h6 class="text-light mb-3">Contact</h6>
+                <p class="text-muted small"><i class="fas fa-envelope me-2"></i>{{ ADMIN_EMAIL }}</p>
+            </div>
+        </div>
+        <hr class="border-secondary">
+        <p class="text-center text-muted small py-2">
+            &copy; 2025 {{ SITE_NAME }}. Secure Software Development — IKB21503.
+        </p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

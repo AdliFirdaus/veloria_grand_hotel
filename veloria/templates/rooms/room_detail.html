@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Room {{ room.room_number }} - {{ SITE_NAME }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'hotel:home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'rooms:room_list' %}">Rooms</a></li>
+            <li class="breadcrumb-item active">Room {{ room.room_number }}</li>
+        </ol>
+    </nav>
+    <div class="row g-4">
+        <div class="col-md-7">
+            {% if room.image %}
+            <img src="{{ room.image.url }}" class="img-fluid rounded-3 shadow w-100" style="max-height:400px;object-fit:cover;" alt="Room {{ room.room_number }}">
+            {% else %}
+            <div class="bg-light rounded-3 d-flex align-items-center justify-content-center" style="height:300px;">
+                <i class="fas fa-bed fa-5x text-muted"></i>
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-md-5">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <h2 class="font-serif">{{ room.room_type.name }}</h2>
+                <span class="badge bg-navy fs-6">Room {{ room.room_number }}</span>
+            </div>
+            <h3 class="text-gold mb-3">RM {{ room.price_per_night }}<small class="text-muted fs-6 fw-normal">/night</small></h3>
+            <p class="text-muted">{{ room.description }}</p>
+            <div class="row g-2 mb-3">
+                <div class="col-6"><div class="border rounded p-2 text-center small"><i class="fas fa-users text-navy me-1"></i>{{ room.capacity }} Guests</div></div>
+                <div class="col-6"><div class="border rounded p-2 text-center small"><i class="fas fa-layer-group text-navy me-1"></i>Floor {{ room.floor }}</div></div>
+            </div>
+            {% if room.get_amenities_list %}
+            <h6 class="mb-2">Amenities</h6>
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                {% for amenity in room.get_amenities_list %}
+                <span class="badge bg-light text-dark border"><i class="fas fa-check text-success me-1"></i>{{ amenity }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <div class="d-flex gap-2 mt-4">
+                {% if user.is_authenticated %}
+                    {% if not user.is_admin_user %}
+                    <a href="{% url 'bookings:booking_create' room.pk %}" class="btn btn-gold btn-lg px-4">
+                        <i class="fas fa-calendar-plus me-2"></i>Book This Room
+                    </a>
+                    {% else %}
+                    <a href="{% url 'rooms:room_update' room.pk %}" class="btn btn-navy"><i class="fas fa-edit me-2"></i>Edit Room</a>
+                    <a href="{% url 'rooms:room_delete' room.pk %}" class="btn btn-outline-danger"><i class="fas fa-trash me-2"></i>Delete</a>
+                    {% endif %}
+                {% else %}
+                <a href="{% url 'accounts:login' %}?next={% url 'rooms:room_detail' room.pk %}" class="btn btn-gold btn-lg px-4">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login to Book
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

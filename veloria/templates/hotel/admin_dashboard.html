@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard - {{ SITE_NAME }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="font-serif"><i class="fas fa-tachometer-alt text-gold me-2"></i>Admin Dashboard</h2>
+        <span class="badge bg-navy fs-6"><i class="fas fa-shield-alt me-1"></i>Admin</span>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="stat-card bg-navy text-white p-4 rounded-3 shadow">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p class="mb-1 opacity-75">Total Rooms</p>
+                        <h2 class="mb-0">{{ total_rooms }}</h2>
+                    </div>
+                    <i class="fas fa-bed fa-2x opacity-50"></i>
+                </div>
+                <small class="opacity-75">{{ available_rooms }} available</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card bg-gold text-white p-4 rounded-3 shadow">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p class="mb-1 opacity-75">Total Bookings</p>
+                        <h2 class="mb-0">{{ total_bookings }}</h2>
+                    </div>
+                    <i class="fas fa-calendar-check fa-2x opacity-50"></i>
+                </div>
+                <small class="opacity-75">{{ pending_bookings }} pending</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card bg-success text-white p-4 rounded-3 shadow">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p class="mb-1 opacity-75">Total Guests</p>
+                        <h2 class="mb-0">{{ total_guests }}</h2>
+                    </div>
+                    <i class="fas fa-users fa-2x opacity-50"></i>
+                </div>
+                <small class="opacity-75">Registered users</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card bg-info text-white p-4 rounded-3 shadow">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p class="mb-1 opacity-75">Available Rooms</p>
+                        <h2 class="mb-0">{{ available_rooms }}</h2>
+                    </div>
+                    <i class="fas fa-door-open fa-2x opacity-50"></i>
+                </div>
+                <small class="opacity-75">Ready to book</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row g-3 mb-4">
+        <div class="col-12"><h5 class="text-muted">Quick Actions</h5></div>
+        <div class="col-auto"><a href="{% url 'rooms:room_create' %}" class="btn btn-navy"><i class="fas fa-plus me-2"></i>Add New Room</a></div>
+        <div class="col-auto"><a href="{% url 'bookings:booking_list' %}" class="btn btn-outline-navy"><i class="fas fa-calendar me-2"></i>Manage Bookings</a></div>
+        <div class="col-auto"><a href="{% url 'audit:audit_log_list' %}" class="btn btn-outline-secondary"><i class="fas fa-clipboard-list me-2"></i>View Audit Logs</a></div>
+    </div>
+
+    <!-- Recent Bookings -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-navy text-white">
+            <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Recent Bookings</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Guest</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Status</th><th>Total</th><th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in recent_bookings %}
+                        <tr>
+                            <td>{{ booking.user.get_full_name|default:booking.user.username }}</td>
+                            <td>Room {{ booking.room.room_number }}</td>
+                            <td>{{ booking.check_in_date }}</td>
+                            <td>{{ booking.check_out_date }}</td>
+                            <td><span class="badge status-{{ booking.status }}">{{ booking.get_status_display }}</span></td>
+                            <td>RM {{ booking.total_price }}</td>
+                            <td><a href="{% url 'bookings:booking_detail' booking.pk %}" class="btn btn-sm btn-outline-navy">View</a></td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="7" class="text-center text-muted py-3">No bookings yet.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
